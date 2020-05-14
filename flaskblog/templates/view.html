@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">essays {{ post.author.username }} ({{ essays.total }})</h1>
+    <p>{{ essays.content }}</p>
+    {% for essay in essays.items %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + essay.student.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ essay.student.username }}</a>
+              <small class="text-muted">{{ essay.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <p><strong><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.question }}</a></strong></p>
+            <p class="article-content">{{ essay.content }}</p>
+            <p class="article-content"><strong>Score : {{ essay.score }}</strong></p>
+          </div>
+        </article>
+    {% endfor %}
+    {% for page_num in essays.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if essays.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('view', title = post.title) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('view', title = post.title) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}
